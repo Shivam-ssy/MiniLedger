@@ -1,0 +1,15 @@
+{
+  "name": "miniledger-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MiniLedger - App to track money lent to friends",
+  "scripts": {
+    "dev": "npm --prefix backend run dev",
+    "build": "npm --prefix backend run build",
+    "test": "npm --prefix backend run test",
+    "migrate": "npm --prefix backend run migrate",
+    "lint": "npm --prefix backend run lint",
+    "format": "npm --prefix backend run format",
+    "app:dev": "npm --prefix app start"
+  }
+}

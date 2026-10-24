@@ -1,0 +1,53 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum LoanStatus {
+  PENDING
+  REPAID
+}
+
+model User {
+  id        String   @id @default(uuid()) @db.Uuid
+  phone     String   @unique
+  createdAt DateTime @default(now())
+  loans     Loan[]
+
+  @@map("users")
+}
+
+model Otp {
+  id         String    @id @default(uuid()) @db.Uuid
+  phone      String
+  codeHash   String
+  expiresAt  DateTime
+  attempts   Int       @default(0)
+  consumedAt DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([phone, createdAt])
+  @@map("otps")
+}
+
+model Loan {
+  id         String     @id @default(uuid()) @db.Uuid
+  userId     String     @db.Uuid
+  friendName String     @db.VarChar(100)
+  amount     Int // Minor units (paise)
+  dueDate    DateTime   @db.Date
+  status     LoanStatus @default(PENDING)
+  repaidAt   DateTime?
+  receiptUrl String?
+  createdAt  DateTime   @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status])
+  @@index([userId, dueDate])
+  @@map("loans")
+}
